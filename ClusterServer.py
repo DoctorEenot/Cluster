@@ -60,7 +60,7 @@ def main():
         if a == 'n':
             run = False
     
-    count = input("Num of scripts: ")
+    count = int(input("Num of scripts: "))
     events = []
     threads = []
     if count <= len(connections):
@@ -70,13 +70,13 @@ def main():
             threads.append(threading.Thread(target=SendProg,args=(str(i)+'.py',i)))
         for i in range(count):
             threads[i].start()
-            events[i].send()
+            events[i].set()
         for i in range(count):
             threads[i].join()
     else:
         print('Not enough connections, will be repaired soon.')
-    ans = SendProg('hash.py',0)
-    print(ans)
+    #ans = SendProg('hash.py',0)
+    #print(ans)
 
     
 
