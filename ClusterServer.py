@@ -1,9 +1,13 @@
 import socket
 import threading
 import time
+
+"""
+Files with scripts must be called 0.py ; 1.py ; ...
+"""
+
+
 Port = 765
-
-
 sock = socket.socket()
 sock.bind(('',Port))
 connections = []
@@ -38,7 +42,10 @@ def SendProg(FileName,id):
         
         if data == b'1':
             ac = False
-    ans = connections[id][0].recv(1024)
+    ans = connections[id][0].recv(2048)
+    file = open('out'+str(id),'w')
+    file.write(str(ans))
+    file.close()
     return ans
 
 def main():
@@ -53,9 +60,22 @@ def main():
         if a == 'n':
             run = False
     
-    input("Start?")
-    
-    ans = SendProg('hi.py',0)
+    count = input("Num of scripts: ")
+    events = []
+    threads = []
+    if count <= len(connections):
+        for i in range(count):
+            events.append(threading.Event())
+        for i in range(count):
+            threads.append(threading.Thread(target=SendProg,args=(str(i)+'.py',i)))
+        for i in range(count):
+            threads[i].start()
+            events[i].send()
+        for i in range(count):
+            threads[i].join()
+    else:
+        print('Not enough connections, will be repaired soon.')
+    ans = SendProg('hash.py',0)
     print(ans)
 
     

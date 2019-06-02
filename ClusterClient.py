@@ -18,7 +18,6 @@ def main():
     while True:
         FN = soc.recv(100).decode('utf-8')
         data = soc.recv(2048)
-    
         soc.send(b'1')
         File = open(FN,'wb')
         File.write(data)
@@ -32,7 +31,7 @@ def main():
         time.sleep(1)
         soc.send(data)
         print('Done')
-        input()
+        
         
     
     
